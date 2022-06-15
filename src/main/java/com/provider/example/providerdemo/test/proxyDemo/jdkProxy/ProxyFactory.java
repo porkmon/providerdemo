@@ -1,0 +1,56 @@
+package com.provider.example.providerdemo.test.proxyDemo.jdkProxy;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @Author wzr
+ * @Description TODO
+ * @Date 2022/5/3 22:31
+ * @Version 1.0
+ */
+public class ProxyFactory {
+    //维护一个目标对象 , Object
+    private Object target;
+
+    public ProxyFactory(Object target){
+        this.target=target;
+    }
+    //生成代理对象
+    public Object getProxyInstance(){
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.println("jdk proxy start ...");
+                //反射机制调用目标对象的方法
+                Object returnVal = method.invoke(target, args);
+                System.out.println("jdk proxy end ...");
+                return null;
+
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        /*String oldRequestMsg="{\"key1\":\"key1\",\"list1\":[{\"list1obj1\":{\"list1obj1key1\":\"list1obj1key1\",\"list1obj1key2\":\"list1obj1key2\"},\"list11\":[{\"list11key2\":\"list11key2\",\"list11key1\":\"list11key1\"}],\"list1key1\":\"list1key1\",\"list1key2\":\"list1key2\"}],\"key2\":\"key2\",\"obj1\":{\"obj1key2\":\"obj1key2\",\"obj1key1\":\"obj1key1\",\"obj11\":{\"obj11key1\":\"obj11key1\",\"obj11key2\":\"obj11key2\"},\"obj1list1\":[{\"obj1list1key2\":\"obj1list1key2\",\"obj1list1key1\":\"obj1list1key1\"}]}}";
+        String oldRespMsg="{\"respkey2\":\"respkey2\",\"respkey1\":\"respkey1\",\"respobj1\":{\"respobj11\":{\"respobj11key2\":\"respobj11key2\",\"respobj11key1\":\"respobj11key1\"},\"respobj1list1\":[{\"respobj1list1key1\":\"respobj1list1key1\",\"respobj1list1key2\":\"respobj1list1key2\"}],\"respobj1key1\":\"respobj1key1\",\"respobj1key2\":\"respobj1key2\"},\"resplist1\":[{\"resplist11\":[{\"resplist11key1\":\"resplist11key1\",\"resplist11key2\":\"resplist11key2\"}],\"resplist1obj1\":{\"resplist1obj1key2\":\"resplist1obj1key2\",\"resplist1obj1key1\":\"resplist1obj1key1\"},\"resplist1key2\":\"resplist1key2\",\"resplist1key1\":\"resplist1key1\"}]}";
+        String oldCon="[{\"httpHeader1\":{\"paramOrder\":\"1\",\"paramName\":\"httpHeader1\",\"paramMark\":\"==\",\"paramValue\":\"httpHeader1\",\"paramType\":\"String\",\"paramCName\":\"请求参数1\"}},{\"httpHeader2\":{\"paramOrder\":\"2\",\"paramName\":\"httpHeader2\",\"paramMark\":\"==\",\"paramValue\":\"httpHeader2\",\"paramType\":\"String\",\"paramCName\":\"请求参数2\"}},{\"httpHeader3\":{\"paramOrder\":\"3\",\"paramName\":\"httpHeader3\",\"paramMark\":\"==\",\"paramValue\":\"httpHeader3\",\"paramType\":\"String\",\"paramCName\":\"请求参数3\"}}]";
+        String oldConBk="[{\"key1\":{\"paramOrder\":\"1\",\"paramName\":\"key1\",\"paramMark\":\"==\",\"paramValue\":\"key1\",\"paramType\":\"String\",\"paramCName\":\"key1\"}},{\"key2\":{\"paramOrder\":\"2\",\"paramName\":\"key2\",\"paramMark\":\"==\",\"paramValue\":\"key2\",\"paramType\":\"String\",\"paramCName\":\"key2\"}},{\"list1\":{\"paramOrder\":\"3\",\"paramName\":\"list1\",\"paramMark\":\"==\",\"paramValue\":[{\"list1key2\":{\"paramOrder\":\"3.1\",\"paramName\":\"list1key2\",\"paramMark\":\"==\",\"paramValue\":\"list1key2\",\"paramType\":\"String\",\"paramCName\":\"list1key2\"}},{\"list11\":{\"paramOrder\":\"3.2\",\"paramName\":\"list11\",\"paramMark\":\"==\",\"paramValue\":[{\"list11key2\":{\"paramOrder\":\"3.2.1\",\"paramName\":\"list11key2\",\"paramMark\":\"==\",\"paramValue\":\"list11key2\",\"paramType\":\"String\",\"paramCName\":\"list11key2\"}},{\"list11key1\":{\"paramOrder\":\"3.2.2\",\"paramName\":\"list11key1\",\"paramMark\":\"==\",\"paramValue\":\"list11key1\",\"paramType\":\"String\",\"paramCName\":\"list11key1\"}}],\"paramType\":\"List\",\"paramCName\":\"list11\"}},{\"list1obj1\":{\"paramOrder\":\"3.3\",\"paramName\":\"list1obj1\",\"paramMark\":\"==\",\"paramValue\":[{\"list1obj1key2\":{\"paramOrder\":\"3.3.1\",\"paramName\":\"list1obj1key2\",\"paramMark\":\"==\",\"paramValue\":\"list1obj1key2\",\"paramType\":\"String\",\"paramCName\":\"list1obj1key2\"}},{\"list1obj1key1\":{\"paramOrder\":\"3.3.2\",\"paramName\":\"list1obj1key1\",\"paramMark\":\"==\",\"paramValue\":\"list1obj1key1\",\"paramType\":\"String\",\"paramCName\":\"list1obj1key1\"}}],\"paramType\":\"Object\",\"paramCName\":\"list1obj1\"}},{\"list1key1\":{\"paramOrder\":\"3.4\",\"paramName\":\"list1key1\",\"paramMark\":\"==\",\"paramValue\":\"list1key1\",\"paramType\":\"String\",\"paramCName\":\"list1key1\"}}],\"paramType\":\"List\",\"paramCName\":\"list1\"}},{\"obj1\":{\"paramOrder\":\"4\",\"paramName\":\"obj1\",\"paramMark\":\"==\",\"paramValue\":[{\"obj1key2\":{\"paramOrder\":\"4.1\",\"paramName\":\"obj1key2\",\"paramMark\":\"==\",\"paramValue\":\"obj1key2\",\"paramType\":\"String\",\"paramCName\":\"obj1key2\"}},{\"obj11\":{\"paramOrder\":\"4.2\",\"paramName\":\"obj11\",\"paramMark\":\"==\",\"paramValue\":[{\"obj11key1\":{\"paramOrder\":\"4.2.1\",\"paramName\":\"obj11key1\",\"paramMark\":\"==\",\"paramValue\":\"obj11key1\",\"paramType\":\"String\",\"paramCName\":\"obj11key1\"}},{\"obj11key2\":{\"paramOrder\":\"4.2.2\",\"paramName\":\"obj11key2\",\"paramMark\":\"==\",\"paramValue\":\"obj11key2\",\"paramType\":\"String\",\"paramCName\":\"obj11key2\"}}],\"paramType\":\"Object\",\"paramCName\":\"obj11\"}},{\"obj1list1\":{\"paramOrder\":\"4.3\",\"paramName\":\"obj1list1\",\"paramMark\":\"==\",\"paramValue\":[{\"obj1list1key2\":{\"paramOrder\":\"4.3.1\",\"paramName\":\"obj1list1key2\",\"paramMark\":\"==\",\"paramValue\":\"obj1list1key2\",\"paramType\":\"String\",\"paramCName\":\"obj1list1key2\"}},{\"obj1list1key1\":{\"paramOrder\":\"4.3.2\",\"paramName\":\"obj1list1key1\",\"paramMark\":\"==\",\"paramValue\":\"obj1list1key1\",\"paramType\":\"String\",\"paramCName\":\"obj1list1key1\"}}],\"paramType\":\"List\",\"paramCName\":\"bj1list1\"}},{\"obj1key1\":{\"paramOrder\":\"4.4\",\"paramName\":\"obj1key1\",\"paramMark\":\"==\",\"paramValue\":\"obj1key1\",\"paramType\":\"String\",\"paramCName\":\"obj1key1\"}}],\"paramType\":\"Object\",\"paramCName\":\"obj1\"}}]";
+
+        String newRequestMsg="{\"key1\":\"key1\",\"list1\":[{\"list1obj1\":{\"list1obj1key1\":\"\",\"list1obj1key2\":\"\"},\"list11\":[{\"list11key2\":\"\",\"list11key1\":\"\"}],\"list1key1\":\"\",\"list1key2\":\"\"}],\"key2\":\"key2\",\"obj1\":{\"obj1key2\":\"\",\"obj1key1\":\"\",\"obj11\":{\"obj11key1\":\"\",\"obj11key2\":\"\"},\"obj1list1\":[{\"obj1list1key2\":\"\",\"obj1list1key1\":\"\"}]}}";
+        String newRespMsg="{\"respkey2\":\"respkey2\",\"respkey1\":\"respkey1\",\"respobj1\":{\"respobj11\":{\"respobj11key2\":\"respobj11key2\",\"respobj11key1\":\"respobj11key1\"},\"respobj1list1\":[{\"respobj1list1key1\":\"respobj1list1key1\",\"respobj1list1key2\":\"respobj1list1key2\"}],\"respobj1key1\":\"respobj1key1\",\"respobj1key2\":\"respobj1key2\"},\"resplist1\":[{\"resplist11\":[{\"resplist11key1\":\"resplist11key1\",\"resplist11key2\":\"resplist11key2\"}],\"resplist1obj1\":{\"resplist1obj1key2\":\"resplist1obj1key2\",\"resplist1obj1key1\":\"resplist1obj1key1\"},\"resplist1key2\":\"resplist1key2\",\"resplist1key1\":\"resplist1key1\"}]}";
+        String newConBk="[{\"key1\":{\"paramType\":\"String\",\"paramOrder\":\"1\",\"paramCName\":\"key1\",\"paramMark\":\"==\",\"paramName\":\"key1\",\"paramValue\":\"key1\"}},{\"key2\":{\"paramType\":\"String\",\"paramOrder\":\"2\",\"paramCName\":\"key2\",\"paramMark\":\"==\",\"paramName\":\"key2\",\"paramValue\":\"key2\"}},{\"list1\":{\"paramType\":\"List\",\"paramOrder\":\"3\",\"paramCName\":\"list1\",\"paramMark\":\"==\",\"paramName\":\"list1\",\"paramValue\":[{\"list1key2\":{\"paramType\":\"String\",\"paramOrder\":\"3.1\",\"paramCName\":\"list1key2\",\"paramMark\":\"==\",\"paramName\":\"list1key2\",\"paramValue\":\"list1key2\"}},{\"list11\":{\"paramType\":\"List\",\"paramOrder\":\"3.2\",\"paramCName\":\"list11\",\"paramMark\":\"==\",\"paramName\":\"list11\",\"paramValue\":[{\"list11key2\":{\"paramType\":\"String\",\"paramOrder\":\"3.2.1\",\"paramCName\":\"list11key2\",\"paramMark\":\"==\",\"paramName\":\"list11key2\",\"paramValue\":\"list11key2\"}},{\"list11key1\":{\"paramType\":\"String\",\"paramOrder\":\"3.2.2\",\"paramCName\":\"list11key1\",\"paramMark\":\"==\",\"paramName\":\"list11key1\",\"paramValue\":\"list11key1\"}}]}},{\"list1obj1\":{\"paramType\":\"Object\",\"paramOrder\":\"3.3\",\"paramCName\":\"list1obj1\",\"paramMark\":\"==\",\"paramName\":\"list1obj1\",\"paramValue\":[{\"list1obj1key2\":{\"paramType\":\"String\",\"paramOrder\":\"3.3.1\",\"paramCName\":\"list1obj1key2\",\"paramMark\":\"==\",\"paramName\":\"list1obj1key2\",\"paramValue\":\"list1obj1key2\"}},{\"list1obj1key1\":{\"paramType\":\"String\",\"paramOrder\":\"3.3.2\",\"paramCName\":\"list1obj1key1\",\"paramMark\":\"==\",\"paramName\":\"list1obj1key1\",\"paramValue\":\"list1obj1key1\"}}]}},{\"list1key1\":{\"paramType\":\"String\",\"paramOrder\":\"3.4\",\"paramCName\":\"list1key1\",\"paramMark\":\"==\",\"paramName\":\"list1key1\",\"paramValue\":\"list1key1\"}}]}},{\"obj1\":{\"paramType\":\"Object\",\"paramOrder\":\"4\",\"paramCName\":\"obj1\",\"paramMark\":\"==\",\"paramName\":\"obj1\",\"paramValue\":[{\"obj1key2\":{\"paramType\":\"String\",\"paramOrder\":\"4.1\",\"paramCName\":\"obj1key2\",\"paramMark\":\"==\",\"paramName\":\"obj1key2\",\"paramValue\":\"obj1key2\"}},{\"obj11\":{\"paramType\":\"Object\",\"paramOrder\":\"4.2\",\"paramCName\":\"obj11\",\"paramMark\":\"==\",\"paramName\":\"obj11\",\"paramValue\":[{\"obj11key1\":{\"paramType\":\"String\",\"paramOrder\":\"4.2.1\",\"paramCName\":\"obj11key1\",\"paramMark\":\"==\",\"paramName\":\"obj11key1\",\"paramValue\":\"obj11key1\"}},{\"obj11key2\":{\"paramType\":\"String\",\"paramOrder\":\"4.2.2\",\"paramCName\":\"obj11key2\",\"paramMark\":\"==\",\"paramName\":\"obj11key2\",\"paramValue\":\"obj11key2\"}}]}},{\"obj1list1\":{\"paramType\":\"List\",\"paramOrder\":\"4.3\",\"paramCName\":\"bj1list1\",\"paramMark\":\"==\",\"paramName\":\"obj1list1\",\"paramValue\":[{\"obj1list1key2\":{\"paramType\":\"String\",\"paramOrder\":\"4.3.1\",\"paramCName\":\"obj1list1key2\",\"paramMark\":\"==\",\"paramName\":\"obj1list1key2\",\"paramValue\":\"obj1list1key2\"}},{\"obj1list1key1\":{\"paramType\":\"String\",\"paramOrder\":\"4.3.2\",\"paramCName\":\"obj1list1key1\",\"paramMark\":\"==\",\"paramName\":\"obj1list1key1\",\"paramValue\":\"obj1list1key1\"}}]}},{\"obj1key1\":{\"paramType\":\"String\",\"paramOrder\":\"4.4\",\"paramCName\":\"obj1key1\",\"paramMark\":\"==\",\"paramName\":\"obj1key1\",\"paramValue\":\"obj1key1\"}}]}}]";*/
+
+
+        String msg="{\"key1\":\"\",\"list1\":[{\"list1obj1\":{\"list1obj1key1\":\"\",\"list1obj1key2\":\"\"},\"list11\":[{\"list11key2\":\"\",\"list11key1\":\"\"}],\"list1key1\":\"\",\"list1key2\":\"\"}],\"key2\":\"\",\"obj1\":{\"obj1key2\":\"\",\"obj1key1\":\"\",\"obj11\":{\"obj11key1\":\"\",\"obj11key2\":\"\"},\"obj1list1\":[{\"obj1list1key2\":\"\",\"obj1list1key1\":\"\"}]}}";
+        JSONObject jsonObject = JSON.parseObject(msg);
+        JSONObject obj1 = jsonObject.getJSONObject("obj1");
+        obj1.put("obj1key1","obj1key1");
+        String a=jsonObject.toJSONString();
+        System.out.println(a);
+    }
+}

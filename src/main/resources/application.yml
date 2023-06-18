@@ -34,6 +34,19 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     # 合并多个DruidDataSource的监控数据
     useGlobalDataourceStat: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    jedis:
+      pool:
+        max-wait: 10000
+        max-active: 100
+        max-idle: 20
+        min-idle: 0
+    timeout: 3000
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

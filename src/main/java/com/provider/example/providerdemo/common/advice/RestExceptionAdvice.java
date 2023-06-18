@@ -7,8 +7,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,5 +48,12 @@ public class RestExceptionAdvice extends ExceptionAdvice {
     public ResponseDTO<?> defaultExceptionHandler(Throwable e, Locale locale) {
         log.error("Intercept exception", e);
         return toResponseDTO(ErrorEnum.INTERNAL_SERVER_ERROR.code(), ErrorEnum.INTERNAL_SERVER_ERROR.msg());
+    }
+
+    @ModelAttribute
+    public ResponseDTO<?> resetParam(ResponseDTO<?> responseDTO){
+        responseDTO.getHeader().setCode("123");
+        responseDTO.getHeader().setMsg("我日你哥");
+        return responseDTO;
     }
 }

@@ -1,6 +1,7 @@
 package com.provider.example.providerdemo.test.spring;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author wzr
@@ -9,6 +10,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@Component
 public class B {
     private A a;
 

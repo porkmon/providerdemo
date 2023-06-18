@@ -1,10 +1,15 @@
 package com.provider.example.providerdemo.test.spring;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author wzr
@@ -13,16 +18,23 @@ import org.springframework.context.ApplicationContextAware;
  * @Version 1.0
  */
 @Data
-public class A implements ApplicationContextAware, BeanNameAware {
+@Component
+@Slf4j
+public class A /*implements ApplicationContextAware, BeanNameAware */{
 
     private B b;
 
-    private String beanName;
+    /*private String beanName;
 
     private ApplicationContext applicationContext;
 
-    @Override
+    public void test(){
+        log.info("execute test ...");
+    }*/
+
+    /*@Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        log.info("applicationContext:{}",this.applicationContext);
         this.applicationContext=applicationContext;
     }
 
@@ -31,8 +43,8 @@ public class A implements ApplicationContextAware, BeanNameAware {
         this.beanName=name;
     }
     public String getBeanName(){
-        System.out.println("BeanName:"+this.beanName);
+        log.info("BeanName:{}",this.beanName);
         return this.beanName;
 
-    }
+    }*/
 }

@@ -4,6 +4,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 
@@ -13,7 +16,8 @@ import java.util.Iterator;
  * @Date 2022/5/28 11:09
  * @Version 1.0
  */
-public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
+//@Component
+public class MyBeanFactoryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         Iterator<String> beanNamesIterator = beanFactory.getBeanNamesIterator();
@@ -24,6 +28,11 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanDefinitionName);
             System.out.println("增强beanDifinition");
         }
+
+    }
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 
     }
 }
